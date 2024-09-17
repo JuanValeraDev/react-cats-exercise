@@ -1,34 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
+import {useCatFact, useCatPicture} from "./Hooks.jsx";
 
 export default function App() {
 
-    const [fact, setFact] = useState()
-    const [catPicture, setCatPicture] = useState()
+    const catFact = useCatFact()
+    const catPicture = useCatPicture(catFact)
 
-    useEffect(() => {
-
-        fetch("https://catfact.ninja/fact")
-            .then(res => res.json())
-            .then(data => {
-                const {fact} = data
-                setFact(fact)
-
-                const threeFirstWords = fact.split(" ").slice(0, 3).join(" ")
-                console.log("En useEffect " + threeFirstWords)
-
-                fetch(`https://cataas.com/cat/says/${threeFirstWords}`)
-                    .then(data => {
-                            const {url} = data
-                            setCatPicture(url)
-                        }
-                    )
-            })
-    }, [])
-
-    return <main>
-        {fact && <p>{fact}</p>}
-        {catPicture &&
-            <img src={catPicture} alt={"Random picture got from using the first three words of a random fact."}/>}
-    </main>
+return <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+    {catFact && <div style={{fontSize: '1.5em', marginTop:'2em', marginLeft:'2em', marginRight:'2em'}}>{catFact}</div>}
+    {catPicture &&
+        <img style={{ maxWidth: '40%', height: 'auto', marginTop:'2em', borderRadius: '5%', border: '5px solid black', }} src={catPicture} alt={"Random picture got from using the first three words of a random fact."}/>}
+</div>
 }
 
